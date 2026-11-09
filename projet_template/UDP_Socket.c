@@ -11,6 +11,10 @@
 #include "stm32f7xx.h"                  // Device header
 #include "AppWizard.h"
 #include <stdio.h>
+#include <string.h>
+
+#define Servo_Min 1000	//largeur d'impusion pour 0° en us
+#define Servo_Max 2000	//largeur d'impusion pour 180° en us
  
 int32_t udp_sock;                       // UDP socket handle
  
@@ -18,6 +22,8 @@ int32_t udp_sock;                       // UDP socket handle
 uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf, uint32_t len) {
 	
   // Data received
+	
+	
   /* Example
   if ((buf[0] == 0x01) && (len == 2)) {
     // Switch LEDs on and off
@@ -49,11 +55,11 @@ void Init_Ethernet (void) {
  
   netInitialize ();
  
-  // Initialize UDP socket and open port 2000
-  //udp_sock = netUDP_GetSocket (udp_cb_func);
-  //if (udp_sock > 0) {
-  //  netUDP_Open (udp_sock, 2000);
-  //}
+  // Initialize UDP socket and open port 5000
+//  udp_sock = netUDP_GetSocket (udp_cb_func);
+//  if (udp_sock > 0) {
+//    netUDP_Open (udp_sock, 5000); //Port 5000 de la carte
+//  }
 }
 
 //! [code_UDP_Socket]

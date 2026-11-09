@@ -25,10 +25,14 @@
 #define RTE_Drivers_PHY_LAN8742A        /* Driver PHY LAN8742A */
 /* Keil::Device:STM32Cube Framework:Classic@1.3.0 */
 #define RTE_DEVICE_FRAMEWORK_CLASSIC
+/* Keil::Device:STM32Cube HAL:ADC@1.3.0 */
+#define RTE_DEVICE_HAL_ADC
 /* Keil::Device:STM32Cube HAL:Common@1.3.0 */
 #define RTE_DEVICE_HAL_COMMON
 /* Keil::Device:STM32Cube HAL:Cortex@1.3.0 */
 #define RTE_DEVICE_HAL_CORTEX
+/* Keil::Device:STM32Cube HAL:DAC@1.3.0 */
+#define RTE_DEVICE_HAL_DAC
 /* Keil::Device:STM32Cube HAL:DMA2D@1.3.0 */
 #define RTE_DEVICE_HAL_DMA2D
 /* Keil::Device:STM32Cube HAL:DMA@1.3.0 */
