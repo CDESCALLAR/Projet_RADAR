@@ -538,12 +538,6 @@
 
   <RTE>
     <apis>
-      <api Capiversion="1.0.0" Cclass="Board Support" Cgroup="Graphic LCD" exclusive="0">
-        <package name="MDK-Middleware" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="7.17.0"/>
-        <targetInfos>
-          <targetInfo name="Target 1"/>
-        </targetInfos>
-      </api>
       <api Capiversion="1.0.1" Cclass="Board Support" Cgroup="Touchscreen" exclusive="0">
         <package name="MDK-Middleware" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="7.17.0"/>
         <targetInfos>
@@ -588,193 +582,175 @@
       </api>
     </apis>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.2.0" condition="ARMv6_7_8-M Device" ymlID="CMSIS:CORE">
-        <package name="CMSIS" schemaVersion="1.7.53" url="https://www.keil.com/pack/" vendor="ARM" version="6.3.0"/>
-        <targetInfos>
-          <targetInfo name="Target 1"/>
-        </targetInfos>
-      </component>
-      <component Capiversion="1.0.1" Cclass="CMSIS" Cgroup="OS Tick" Csub="SysTick" Cvendor="ARM" Cversion="1.0.5" condition="OS Tick SysTick" ymlID="CMSIS:OS Tick:SysTick">
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.0.0" condition="ARMv6_7_8-M Device">
         <package name="CMSIS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="6.0.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.9.1" condition="RTX5" ymlID="CMSIS:RTOS2:Keil RTX5&amp;Source">
-        <package name="CMSIS-RTX" schemaVersion="1.7.54" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.1"/>
+      <component Capiversion="1.0.1" Cclass="CMSIS" Cgroup="OS Tick" Csub="SysTick" Cvendor="ARM" Cversion="1.0.5" condition="OS Tick SysTick">
+        <package name="CMSIS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="6.0.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="Drivers" Csub="Basic I/O" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery BSP" ymlID="Board Support&amp;STM32F746G-Discovery:Drivers:Basic I/O">
+      <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.9.0" condition="RTX5">
+        <package name="CMSIS-RTX" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="Drivers" Csub="Basic I/O" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery BSP">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="Drivers" Csub="SDRAM" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery BSP SDRAM" ymlID="Board Support&amp;STM32F746G-Discovery:Drivers:SDRAM">
+      <component Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="Drivers" Csub="SDRAM" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery BSP SDRAM">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="Drivers" Csub="Touch Screen" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery BSP TS" ymlID="Board Support&amp;STM32F746G-Discovery:Drivers:Touch Screen">
+      <component Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="Drivers" Csub="Touch Screen" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery BSP TS">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="Graphic LCD" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery GLCD" ymlID="Board Support&amp;STM32F746G-Discovery:Graphic LCD">
+      <component Capiversion="1.0.0" Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="Touchscreen" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery TS">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="Touchscreen" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery TS" ymlID="Board Support&amp;STM32F746G-Discovery:Touchscreen">
+      <component Capiversion="1.1.0" Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="emWin LCD" Cvariant="RGB IF" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery LCD_RGB">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.1.0" Cbundle="STM32F746G-Discovery" Cclass="Board Support" Cgroup="emWin LCD" Cvariant="RGB IF" Cvendor="Keil" Cversion="1.1.1" condition="STM32F746G-Discovery LCD_RGB" ymlID="Board Support&amp;STM32F746G-Discovery:emWin LCD&amp;RGB IF">
+      <component Capiversion="2.1.0" Cclass="CMSIS Driver" Cgroup="Ethernet MAC" Cvendor="Keil" Cversion="1.12.0" condition="STM32F7 CMSIS_Driver ETH_MAC">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Capiversion="2.1.0" Cclass="CMSIS Driver" Cgroup="Ethernet MAC" Cvendor="Keil" Cversion="1.12.0" condition="STM32F7 CMSIS_Driver ETH_MAC" ymlID="CMSIS Driver:Ethernet MAC">
-        <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
-        <targetInfos>
-          <targetInfo name="Target 1"/>
-        </targetInfos>
-      </component>
-      <component Capiversion="2.2.0" Cclass="CMSIS Driver" Cgroup="Ethernet PHY" Csub="LAN8742A" Cvendor="Keil" Cversion="1.3.0" condition="Device CMSIS_Core" ymlID="CMSIS Driver:Ethernet PHY:LAN8742A">
+      <component Capiversion="2.2.0" Cclass="CMSIS Driver" Cgroup="Ethernet PHY" Csub="LAN8742A" Cvendor="Keil" Cversion="1.3.0" condition="Device CMSIS_Core">
         <package name="CMSIS-Driver" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="2.8.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cclass="Device" Cgroup="STM32Cube Framework" Csub="Classic" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 Framework Classic" ymlID="Device:STM32Cube Framework:Classic">
+      <component Capiversion="1.0.0" Cclass="Device" Cgroup="STM32Cube Framework" Csub="Classic" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 Framework Classic">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="ADC" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL DMA" ymlID="Device:STM32Cube HAL:ADC">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="Common" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL Common">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="Common" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL Common" ymlID="Device:STM32Cube HAL:Common">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="Cortex" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="Cortex" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL" ymlID="Device:STM32Cube HAL:Cortex">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="DMA2D" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="DAC" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL DMA" ymlID="Device:STM32Cube HAL:DAC">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="DMA" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="DMA2D" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL" ymlID="Device:STM32Cube HAL:DMA2D">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="GPIO" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="DMA" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL" ymlID="Device:STM32Cube HAL:DMA">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="I2C" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL DMA">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="GPIO" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL" ymlID="Device:STM32Cube HAL:GPIO">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="LTDC" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7x6_7x7_7x8_7x9_750 HAL">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="I2C" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL DMA" ymlID="Device:STM32Cube HAL:I2C">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="PWR" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="LTDC" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7x6_7x7_7x8_7x9_750 HAL" ymlID="Device:STM32Cube HAL:LTDC">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="RCC" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL GPIO">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="PWR" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL" ymlID="Device:STM32Cube HAL:PWR">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="SDRAM" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL DMA">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="RCC" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL GPIO" ymlID="Device:STM32Cube HAL:RCC">
+      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="UART" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL DMA">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="SDRAM" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL DMA" ymlID="Device:STM32Cube HAL:SDRAM">
+      <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.2.5" condition="STM32F7 CMSIS">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="UART" Cvendor="Keil" Cversion="1.3.0" condition="STM32F7 HAL DMA" ymlID="Device:STM32Cube HAL:UART">
+      <component Cclass="Graphics Display" Cgroup="STM32F746G-Discovery" Cvariant="RGB IF" Cvendor="Keil" Cversion="1.0.2" condition="STM32F7 HAL LTDC DMA2D Graphics LCD_RGB">
         <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.2.5" condition="STM32F7 CMSIS" ymlID="Device:Startup">
-        <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
-        <targetInfos>
-          <targetInfo name="Target 1"/>
-        </targetInfos>
-      </component>
-      <component Cclass="Graphics Display" Cgroup="STM32F746G-Discovery" Cvariant="RGB IF" Cvendor="Keil" Cversion="1.0.2" condition="STM32F7 HAL LTDC DMA2D Graphics LCD_RGB" ymlID="Graphics Display:STM32F746G-Discovery&amp;RGB IF">
-        <package name="STM32F7xx_DFP" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="2.16.0"/>
-        <targetInfos>
-          <targetInfo name="Target 1"/>
-        </targetInfos>
-      </component>
-      <component Cbundle="MDK-Plus" Cclass="Network" Cgroup="CORE" Cvariant="IPv4 Release" Cvendor="Keil" Cversion="7.19.0" condition="CMSIS Core with RTOS" ymlID="Network&amp;MDK-Plus:CORE&amp;IPv4 Release">
+      <component Cbundle="MDK-Plus" Cclass="Network" Cgroup="CORE" Cvariant="IPv4 Release" Cvendor="Keil" Cversion="7.19.0" condition="CMSIS Core with RTOS">
         <package name="MDK-Middleware" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="7.17.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cbundle="MDK-Plus" Cclass="Network" Cgroup="Interface" Csub="ETH" Cvendor="Keil" Cversion="7.19.0" condition="Network Driver ETH" maxInstances="2" ymlID="Network&amp;MDK-Plus:Interface:ETH">
+      <component Cbundle="MDK-Plus" Cclass="Network" Cgroup="Interface" Csub="ETH" Cvendor="Keil" Cversion="7.19.0" condition="Network Driver ETH" maxInstances="2">
         <package name="MDK-Middleware" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="7.17.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cbundle="MDK-Plus" Cclass="Network" Cgroup="Socket" Csub="UDP" Cvendor="Keil" Cversion="7.19.0" condition="Network Interface" ymlID="Network&amp;MDK-Plus:Socket:UDP">
+      <component Cbundle="MDK-Plus" Cclass="Network" Cgroup="Socket" Csub="UDP" Cvendor="Keil" Cversion="7.19.0" condition="Network Interface">
         <package name="MDK-Middleware" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="7.17.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cbundle="MDK-Pro" Cclass="Graphics" Cgroup="CORE" Cvendor="Segger" Cversion="6.32.3" condition="CMSIS Core with RTOS and Display" ymlID="Graphics&amp;MDK-Pro:CORE">
+      <component Cbundle="MDK-Pro" Cclass="Graphics" Cgroup="CORE" Cvendor="Segger" Cversion="6.32.3" condition="CMSIS Core with RTOS and Display">
         <package name="MDK-Middleware_Graphics" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="1.3.1"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cbundle="MDK-Pro" Cclass="Graphics" Cgroup="Input Device" Csub="Touchscreen" Cvendor="Segger" Cversion="6.32.3" condition="Graphics Core and Touchscreen" ymlID="Graphics&amp;MDK-Pro:Input Device:Touchscreen">
+      <component Cbundle="MDK-Pro" Cclass="Graphics" Cgroup="Input Device" Csub="Touchscreen" Cvendor="Segger" Cversion="6.32.3" condition="Graphics Core and Touchscreen">
         <package name="MDK-Middleware_Graphics" schemaVersion="1.7.28" url="https://www.keil.com/pack/" vendor="Keil" version="1.3.1"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
@@ -784,16 +760,16 @@
     <files>
       <file attr="config" category="source" name="Config\RTX_Config.c" version="5.2.0">
         <instance index="0">RTE\CMSIS\RTX_Config.c</instance>
-        <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.9.1" condition="RTX5"/>
-        <package name="CMSIS-RTX" schemaVersion="1.7.54" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.1"/>
+        <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.9.0" condition="RTX5"/>
+        <package name="CMSIS-RTX" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </file>
       <file attr="config" category="header" name="Config\RTX_Config.h" version="5.6.0">
         <instance index="0">RTE\CMSIS\RTX_Config.h</instance>
-        <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.9.1" condition="RTX5"/>
-        <package name="CMSIS-RTX" schemaVersion="1.7.54" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.1"/>
+        <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.9.0" condition="RTX5"/>
+        <package name="CMSIS-RTX" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>

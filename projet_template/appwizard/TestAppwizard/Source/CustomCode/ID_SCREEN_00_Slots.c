@@ -77,11 +77,8 @@ void ID_SCREEN_00__ID_ROTARY_00__WM_NOTIFICATION_VALUE_CHANGED(APPW_ACTION_ITEM 
   Val = APPW_GetValue(ID_SCREEN_00, ID_ROTARY_00, NULL);
   //Val vaut une valeur entre -300 et 300
   //code à exécuter à mettre ici
-	// Echauffement 3 seance1
-	/*
-	TIM10->CCR1 = Val+300;
+	TIM10->CCR1 = Val+300; // TIM10->CCR1 = (uint32_t)(Val + 300) * (TIM10->ARR + 1) / 600;
 	TIM10->CR1 |= (1<<0);	//commence le comptage
-	*/
 }
 
 /*********************************************************************
@@ -104,12 +101,10 @@ void ID_SCREEN_00__ID_TIMER_00__APPW_NOTIFICATION_TIMER(APPW_ACTION_ITEM * pActi
   GUI_USE_PARA(hScreen);
   GUI_USE_PARA(pMsg);
   GUI_USE_PARA(pResult);
-	/*
+	
 	ADC3->CR2 |= (1<<30);	//Démarrage de la conversion
 	while((ADC3->SR & 0x2)==1);	//attente fin de la converion
 	APPW_SetValue(ID_SCREEN_00,ID_GAUGE_00,ADC3->DR);
-	*/
-	APPW_SetValue(ID_SCREEN_00,ID_GAUGE_00,(TIM10->CCR1-2000)*180*28/2000);
 }
 
 /*************************** End of file ****************************/
