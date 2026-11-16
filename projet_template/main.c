@@ -1,4 +1,5 @@
 #include "stm32f7xx.h"                  // Device header
+//#include "servo.h"
 
 extern void configuration_overclock(void);
 extern int Init_GUIThread (void);
@@ -11,17 +12,30 @@ extern void Init_Ethernet (void);
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 #endif
 
-#define Servo_Min 2000	//largeur d'impusion pour 0° en us
-#define Servo_Max 4000	//largeur d'impusion pour 180° en us
+#define Servo_Min 1000	//largeur d'impusion pour 0° en us
+#define Servo_Max 6000	//largeur d'impusion pour 180° en us
+#define Impulse_Trig 20
 
 /*----------------------------------------------------------------------------
  *      Tâche de test (vide) : à compléter par les étudiants
  *---------------------------------------------------------------------------*/
 osThreadId_t tid_Test;
 
+void EXTI9_5_IRQHandler(void){
+	static int detectFront = 1;
+	EXTI->PR = 1;
+	detectFront = 1 - detectFront;
+	if(detectFront == 0){
+		TIM11->CR1 |= (1<<0);	//REcommence le compteur du TRIG
+	}
+	else{
+		TIM11->CNT;
+	}
+}
+
 void InitPeriherique (void)
 {
-	RCC->AHB1ENR |= (1<<5) | (1<<8);	//Activation des GPIO F,I
+	RCC->AHB1ENR |= (1<<5) | (1<<6) | (1<<8);	//Activation des GPIO F,G,I
 	RCC->APB1ENR |= (1<<29);	//Activation DAC
 	RCC->APB2ENR |= (1<<10);	//Activation ADC3
 	RCC->APB2ENR |= (1<<17); // Activation TIM10
@@ -32,12 +46,15 @@ void InitPeriherique (void)
 	GPIOI->MODER |= (1<<4); //Port PI2 en sortie
 	GPIOF->MODER |= (3<<20);		//PF10 en analog mode
 	GPIOF->AFR[0] |= (3<<24);	//PF6 in AF3 mode (TIM10_CH1)
+	GPIOF->AFR[0] |= (3<<28);	//PF7 in AF3 mode (TIM11_CH1)
 	
 	ADC3->SQR3 |= (1<<3);	//Choix de la voie IN8 de SQR3
 	ADC3->CR2 |= (1<<0); //Enable ADC
 	
 	TIM10->CCMR1 |= (6<<4);	//TIM10_CH1 en PWM mode 1
 	TIM10->CCER |= (1<<0);	//connecte OC1 à TIM10_CH1
+	TIM11->CCMR1 |= (6<<4);	//TIM11_CH1 en PWM mode 1
+	TIM11->CCER |= (1<<0);	//connecte OC1 à TIM11_CH1
 	
 	// Echauffement 3 seance1
 	/*
@@ -50,10 +67,27 @@ void InitPeriherique (void)
 	TIM10->ARR = 39999;	//pwm periode 20ms
 	TIM10->CR1 |= (1<<0);	//commence le comptage
 	
+	//Pour TRIG du capteur ultrason
+	TIM11->PSC = 299;	//prescaler
+	TIM11->ARR = 39999;	//pwm periode 60ms
+	TIM11->CCR1 = Impulse_Trig;	// temps haut 10us
+	//TIM11->CR1 |= (1<<0);	//commence le compteur du TRIG
+	
 	DAC->CR |= (1<<0); 	//Activation output channel 1(PA4)
+	
+	RCC->APB2ENR |= (1<<14);//allumer SYSCFG
+	
+	SYSCFG->EXTICR[1] = (6<<8);//dire à EXTI6 que c'est PG6
+	EXTI->IMR |= (1<<6);//démasquer EXTI6 dans IMR
+	
+	EXTI->RTSR |= (1<<6);
+	EXTI->FTSR |= (1<<6);//activer fronts montant et descandant pour EXTI6
+	
+	NVIC_EnableIRQ(EXTI9_5_IRQn);// démasquer dans le NVIC
 }
 
 int distance_cm(void){
+	
 	return 0;
 }
 
@@ -74,10 +108,10 @@ static void Thread_Test (void *argument)
   while (1)
   {
     // Votre boucle de test ici (mesure de distance, balayage du servo, etc.)
-		if(i<=180) i+=15;
-		else i=0;
-		
-		servo_set_angle(i);
+//		if(i<=180) i+=15;
+//		else i=0;
+//		
+//		servo_set_angle(i);
     osDelay(100);   // période de la boucle : 100 ms
   }
 }
@@ -111,9 +145,10 @@ int main(void)
 	**********************************/
 	#ifdef RTE_CMSIS_RTOS2
 	  /* Initialize CMSIS-RTOS2 */
-		//SystemClock_Config();
+
 	  osKernelInitialize ();
 		InitPeriherique();
+		distance_cm();
 
 	  /* Create thread functions that start executing */
 		Init_Ethernet();
