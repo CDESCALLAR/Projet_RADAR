@@ -106,4 +106,5 @@
   C:\ARM\Keil\MDK-Middleware_Graphics\1.3.1\emWin\Include\LISTVIEW_Private.h \
   C:\ARM\Keil\MDK-Middleware_Graphics\1.3.1\emWin\Include\LISTBOX_Private.h \
   C:\ARM\Keil\MDK-Middleware_Graphics\1.3.1\emWin\Include\WHEEL_Private.h \
-  C:\ARM\Keil\MDK-Middleware_Graphics\1.3.1\emWin\Include\MOVIE_Private.h
+  C:\ARM\Keil\MDK-Middleware_Graphics\1.3.1\emWin\Include\MOVIE_Private.h \
+  C:\ARM\ARM\CMSIS\6.3.0\CMSIS\RTOS2\Include\cmsis_os2.h

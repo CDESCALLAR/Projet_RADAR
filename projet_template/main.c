@@ -1,5 +1,5 @@
 #include "stm32f7xx.h"                  // Device header
-//#include "servo.h"
+//#include "servo.h" 
 
 extern void configuration_overclock(void);
 extern int Init_GUIThread (void);
@@ -12,25 +12,32 @@ extern void Init_Ethernet (void);
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 #endif
 
-#define Servo_Min 1000	//largeur d'impusion pour 0° en us
-#define Servo_Max 6000	//largeur d'impusion pour 180° en us
-#define Impulse_Trig 20
+#define Servo_Min 1000	//largeur d'impusion pour 0° en ticks (1tick= 0,5 us)
+#define Servo_Max 5000	//largeur d'impusion pour 180° en ticks
+#define Impulse_Trig 20	//impulsion capteur ultrason
 
 /*----------------------------------------------------------------------------
  *      Tâche de test (vide) : à compléter par les étudiants
  *---------------------------------------------------------------------------*/
 osThreadId_t tid_Test;
 
-void EXTI9_5_IRQHandler(void){
-	static int detectFront = 1;
-	EXTI->PR = 1;
-	detectFront = 1 - detectFront;
-	if(detectFront == 0){
-		TIM11->CR1 |= (1<<0);	//REcommence le compteur du TRIG
+float distance_cm(void){
+	static float duree,distance;
+	TIM11->CR1 |= (1<<0);	//commence le compteur du TRIG
+	if((GPIOG->IDR & (1<<6))==1){//si front montant
+		TIM11->CNT =0;
+		TIM11->CR1 |= (1<<0);
 	}
 	else{
-		TIM11->CNT;
+		duree = TIM11->CNT;
+		distance = duree/58.0;
 	}
+	return distance;
+}
+
+void EXTI9_5_IRQHandler(void){
+	EXTI->PR &= ~(1<<6);
+	distance_cm();
 }
 
 void InitPeriherique (void)
@@ -44,6 +51,7 @@ void InitPeriherique (void)
 	GPIOF->MODER |= (2<<12);		//PF6 en AF mode
 	GPIOF->MODER |= (2<<14);		//PF7 en AF mode
 	GPIOI->MODER |= (1<<4); //Port PI2 en sortie
+	GPIOG->MODER &= ~(1<<6); //Port GP6 en entrée
 	GPIOF->MODER |= (3<<20);		//PF10 en analog mode
 	GPIOF->AFR[0] |= (3<<24);	//PF6 in AF3 mode (TIM10_CH1)
 	GPIOF->AFR[0] |= (3<<28);	//PF7 in AF3 mode (TIM11_CH1)
@@ -86,10 +94,6 @@ void InitPeriherique (void)
 	NVIC_EnableIRQ(EXTI9_5_IRQn);// démasquer dans le NVIC
 }
 
-int distance_cm(void){
-	
-	return 0;
-}
 
 void servo_set_angle(int deg)
 {
@@ -145,10 +149,9 @@ int main(void)
 	**********************************/
 	#ifdef RTE_CMSIS_RTOS2
 	  /* Initialize CMSIS-RTOS2 */
-
+		//SystemClock_Config();
 	  osKernelInitialize ();
 		InitPeriherique();
-		distance_cm();
 
 	  /* Create thread functions that start executing */
 		Init_Ethernet();

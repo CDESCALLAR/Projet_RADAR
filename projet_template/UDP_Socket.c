@@ -7,31 +7,46 @@
  * Rev.:    V7.0.0
  *----------------------------------------------------------------------------*/
 //! [code_UDP_Socket]
+
+// -------------------Déclaration des bibliothèques --------------------------------------------
+
 #include "rl_net.h"
 #include "stm32f7xx.h"                  // Device header
 #include "AppWizard.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "cmsis_os2.h"                  // osThreadNew, osDelay
 
-// Ajouté
-//#ifndef SERVO_H
-//#define SERVO_H
 
-//#define Servo_Min 1000	//largeur d'impusion pour 0° en us
-//#define Servo_Max 6000	//largeur d'impusion pour 180° en us
+// -------------------Déclaration des variables globaux -----------------------------------------
 
-extern void servo_set_angle(int deg);
+#define SCAN_MESURES_MAX  100   // au-dela, la reponse ne tient plus dans un datagramme (1472 /12) = 122
+#define SCAN_REP_MAX  1300      // 100 lignes de 12 caracteres max + "END\n"
+#define FLAG_SCAN  0x0001               // Flag 0 de la tache Scan : "un SCAN est demandé"
 
-//#endif
+static char scan_rep[SCAN_REP_MAX];            // texte de la reponse du SCAN
+
+// Variables partagées entre udp_cb_func (tache réseau) et Thread_Scan.
+// volatile : modifiées par une tache, lues par l'autre.
+static volatile int scan_demande = 0;          // 0 = libre, 1 = SCAN demande ou en cours
+static volatile int scan_debut, scan_fin, scan_pas;
+static int32_t      scan_socket;               // à qui repondre : socket et adresse
+static NET_ADDR     scan_dest;
 
 int32_t udp_sock;                       // UDP socket handle
+osThreadId_t ID_Scan;                   // identifiant de la tache du balayage
+osThreadAttr_t configScan = {.stack_size = 2048};   // pile de 2048 octets (sprintf avec %f)
 
-// PROVISOIRE 
-// Convention : renvoie la distance en cm, ou une valeur < 0 si pas d'écho.
-// Il faudra alors écrire à la place : extern float distance_cm(void);
+
+// -------------------Appel des fonctions (extérieures) ------------------------------------
+
+extern void servo_set_angle(int deg);
+extern float distance_cm(void);
 //float distance_cm (void) { return 42.5f; }
 
+
+// -----------------------Déclaration des fonctions ----------------------------------------------
 
 // Envoie une réponse (chaîne terminée par \0) à l'expéditeur du datagramme reçu.
 static void repondre (int32_t socket, const NET_ADDR *addr, const char *texte) {
@@ -41,7 +56,7 @@ static void repondre (int32_t socket, const NET_ADDR *addr, const char *texte) {
 
   while (texte[n] != '\0') n++;          // longueur de la réponse
   sendbuf = netUDP_GetBuffer (n);        // réserve la zone de données à envoyer
-  //if (sendbuf == NULL) return;           // plus de mémoire, on abandonne
+  if (sendbuf == NULL) return;           // plus de mémoire, on abandonne
   for (i = 0; i < n; i++) sendbuf[i] = (uint8_t)texte[i];
   netUDP_Send (socket, addr, sendbuf, n);
 }
@@ -60,24 +75,38 @@ static int lire_entier (const char *s, int *valeur) {
   return 0;
 }
 
+// Lit "<debut> <fin> <pas>" (trois entiers separes par des espaces).
+// Renvoie 0 si OK, -1 si la commande est mal formee.
+static int lire_scan (const char *s, int *debut, int *fin, int *pas)
+{
+	char *suite;
+  long a, b, c;
 
+  a = strtol(s, &suite, 10);            // 1er nombre ; "suite" pointe juste apres
+  if (suite == s) return -1;            // aucun chiffre lu
+  s = suite;														// saute l'espace et lit la suite
+  b = strtol(s, &suite, 10);            // 2e nombre
+  if (suite == s) return -1;
+  s = suite;
+  c = strtol(s, &suite, 10);            // 3e nombre
+  if (suite == s) return -1;
+  if (*suite != '\0') return -1;        // il reste des caracteres : mal formee
+
+  *debut = (int) a;
+  *fin   = (int) b;
+  *pas   = (int) c;
+	
+  return 0;
+}
  
 // Notify the user application about UDP socket events.
 uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf, uint32_t len) {
 	
-  // Data received
-	
-	
-  /* Example
-  if ((buf[0] == 0x01) && (len == 2)) {
-    // Switch LEDs on and off
-  }
-  */
-	
 	char cmd[20];
   char rep[20];
   uint32_t i;
-  int angle;
+  int32_t angle;
+	int32_t debut, fin, pas; // pour le balayage
   float d;
 
   // Copie dans une chaîne C : buf n'est pas terminé par \0, on s'appuie sur len
@@ -94,19 +123,23 @@ uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf,
     cmd[len] = '\0';
   }
 
-  // Analyse de la commande
-  if (strncmp (cmd, "ANGLE ", 6) == 0) {
+	// Vérification du drapeau
+	if (scan_demande) {                               // balayage en cours : servo et capteur occupés
+    repondre (socket, addr, "ERR occupe\n");
+  }
+	
+  // Analyse de la commande ANGLE nombre   
+  else if (strncmp (cmd, "ANGLE ", 6) == 0) {
     if (lire_entier (&cmd[6], &angle) != 0 || angle > 180) {
       repondre (socket, addr, "ERR angle\n");
     } else {
       servo_set_angle (angle);
-			GPIOI->ODR  |= (1<<2);
-	    //GPIOI->ODR &= ~(1<<2);
       repondre (socket, addr, "OK\n");
     }
   }
+	// Analyse de la commande DIST
   else if (strcmp (cmd, "DIST") == 0) {
-    //d = distance_cm ();
+    d = distance_cm ();
     if (d < 0.0f || d > 999.0f) {                  // pas d'écho (ou valeur très supérieure) en cm
       repondre (socket, addr, "DIST TIMEOUT\n");
     } else {
@@ -114,6 +147,29 @@ uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf,
       repondre (socket, addr, rep);
     }
   }
+	// Analyse de la commande SCAN angle angle pas
+	  else if (strncmp (cmd, "SCAN ", 5) == 0) {
+    if (lire_scan (&cmd[5], &debut, &fin, &pas) != 0) {
+      repondre (socket, addr, "ERR format\n");
+    } else if (debut < 0 || fin > 180 || debut > fin) {
+      repondre (socket, addr, "ERR angle\n");
+    } else if (pas < 1 || pas > 180) {
+      repondre (socket, addr, "ERR pas\n");
+    } else if ((fin - debut) / pas + 1 > SCAN_MESURES_MAX) {
+      repondre (socket, addr, "ERR trop de mesures\n");
+		} else if (ID_Scan == NULL) {
+      repondre (socket, addr, "ERR interne\n");     // la tache du balayage n'existe pas
+    } else {
+      scan_debut  = debut;                          // on note la demande
+      scan_fin    = fin;
+      scan_pas    = pas;
+      scan_socket = socket;                         // ...et à qui repondre
+      scan_dest   = *addr;
+      scan_demande = 1;                             // ...on lève le drapeau (pour dire occupé)
+			osThreadFlagsSet (ID_Scan, FLAG_SCAN);        // ...puis on reveille Thread_Scan
+    }                                               // la reponse part de Thread_Scan
+  }
+		// Commande inconnu
   else {
     repondre (socket, addr, "ERR commande\n");
   }
@@ -137,11 +193,46 @@ void send_udp_data (void) {
     */
   }
 }
+
+// Tache du balayage : dort jusqu'a ce qu'un SCAN soit demande.
+void Thread_Scan (void const * argument) {
+
+  int a, n;
+	float d;
+
+  while (1) {
+    osThreadFlagsWait (FLAG_SCAN, osFlagsWaitAny, osWaitForever);   // sommeil jusqu'au reveil
+		
+		servo_set_angle (scan_debut);                   // on va d'abord à l'angle de depart...
+    osDelay (600);                 // ...en laissant le temps de traverser (600 ms pour 180° car 0,17s par 60°)
+
+    n = 0;                                          // nombre de caracteres ecrits dans scan_rep
+    for (a = scan_debut; a <= scan_fin; a += scan_pas) {
+      servo_set_angle (a);                          // 1) on place le servo
+      osDelay (200);                     						// 2) on attend qu'il se stabilise
+      d = distance_cm ();                           // 3) on mesure
+
+      if (d < 0.0f || d > 999.0f)                   // 4) pas d'echo : on écrit TIMEOUT
+        n += sprintf (&scan_rep[n], "%d TIMEOUT\n", a);
+      else                                          //    sinon la vraie distance
+        n += sprintf (&scan_rep[n], "%d %.1f\n", a, d);
+
+      osDelay (60);      														// 5) pause avant la mesure suivante
+    }
+    n += sprintf (&scan_rep[n], "END\n");
+
+    repondre (scan_socket, &scan_dest, scan_rep); // UN seul datagramme
+    scan_demande = 0;                               // libre pour la commande suivante
+  }
+}
  
 // Allocate and initialize the socket.
 void Init_Ethernet (void) {
  
   netInitialize ();
+	
+	// Creation de la tache du balayage (elle dort jusqu'à la première commande SCAN)
+  ID_Scan = osThreadNew ((osThreadFunc_t) Thread_Scan, NULL, &configScan);
  
   // Initialize UDP socket and open port 5000
   udp_sock = netUDP_GetSocket (udp_cb_func);
