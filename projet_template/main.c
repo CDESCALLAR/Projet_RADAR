@@ -1,5 +1,4 @@
 #include "stm32f7xx.h"                  // Device header
-//#include "servo.h" 
 
 extern void configuration_overclock(void);
 extern int Init_GUIThread (void);
@@ -21,22 +20,25 @@ extern void Init_Ethernet (void);
  *---------------------------------------------------------------------------*/
 osThreadId_t tid_Test;
 
+static float duree=0.0,dureeP=0.0,distance;
+
 float distance_cm(void){
-	static float duree,distance;
-	TIM11->CR1 |= (1<<0);	//commence le compteur du TRIG
-	if((GPIOG->IDR & (1<<6))==1){//si front montant
-		TIM11->CNT =0;
-		TIM11->CR1 |= (1<<0);
-	}
-	else{
-		duree = TIM11->CNT;
-		distance = duree/58.0;
-	}
+
 	return distance;
 }
 
 void EXTI9_5_IRQHandler(void){
-	EXTI->PR &= ~(1<<6);
+	if(EXTI->PR & (1<<6)){
+		EXTI->PR |= (1<<6);
+			TIM11->CR1 |= (1<<0);	//commence le compteur du TRIG
+		duree = TIM11->CNT;
+		if((GPIOG->IDR & (1<<6))){//si front montant
+			dureeP = duree;
+		}
+		else{
+			distance = (duree-dureeP)*1.5/58.0;	//conversion en cm
+		}
+	}
 	distance_cm();
 }
 

@@ -140,7 +140,7 @@ uint32_t udp_cb_func (int32_t socket, const  NET_ADDR *addr, const uint8_t *buf,
 	// Analyse de la commande DIST
   else if (strcmp (cmd, "DIST") == 0) {
     d = distance_cm ();
-    if (d < 0.0f || d > 999.0f) {                  // pas d'écho (ou valeur très supérieure) en cm
+    if (d < 0.0f || d > 400.0f) {                  // pas d'écho (ou valeur très supérieure) en cm
       repondre (socket, addr, "DIST TIMEOUT\n");
     } else {
       sprintf (rep, "DIST %.1f\n", d);
